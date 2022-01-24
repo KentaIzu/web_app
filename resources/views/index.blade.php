@@ -320,11 +320,10 @@
     <div class="card">
       <p class="title mb-15">Todo List</p>
         <div class="todo">
-          <form action="/todo/create" method="post" class="flex between mb-30">
+          <form action="{{route('todo.create');}}" method="post" class="flex between mb-30">
           @csrf
-            <input type="hidden" name="_token">             
-            <input type="text" class="input-add" name="content" >
-            <button class="button-add" type="submit" formaction="{{ route('todo.create') }}">追加</button>
+          <input type="text" class="input-add" name="content" >
+          <button class="button-add" type="submit">追加</button>
           </form>
           
           <table>
@@ -336,23 +335,19 @@
             </tr>
             
             @foreach($todos as $todo)
-              <div>
-                <span class="text-list">
-                  {{ $todo->content }}
-                </span>
-              </div>
+              
             <tr>
               <td>
                 {{ \Carbon\Carbon::now()->format("Y-m-d H:i:s") }}
               </td>
               <form action="/todo/update" method="post">
                 @csrf
-                <input type="hidden" name="_token" >
                 <td>
-                  <input type="text" class="input-update" name="content">
+                  <input type="text" class="input-update" name="content" value="{{ $todo->content }}">
+              </div>
                 </td> 
                 <td>
-                <button type="button" onclick="updateTodo({{ $todo->id }})" class="button-update" formaction="{{ route('todo.update') }}">更新</button>
+                <button type="button" onclick="updateTodo({{ $todo->id }})" class="button-update">更新</button>
                 </td>
               </form>
               
@@ -360,7 +355,7 @@
                 <form action="/todo/delete" method="post">
                   @csrf
                   <input type="hidden" name="_token">
-                  <button type="button" onclick="deleteTodo({{ $todo->id }})" class="button-delete" formaction="{{ route('todo.delete') }}">削除</button>
+                  <button type="button" onclick="deleteTodo({{ $todo->id }})" class="button-delete">削除</button>
                 </form>
               </td>
               @endforeach
