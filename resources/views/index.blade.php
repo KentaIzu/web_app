@@ -6,18 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>COACHTECH</title>
-  <script>
-    function deleteTodo(todoId) {
-      document.querySelector("#select_todo_id").value = todoId;
-      document.querySelector("#todo_form").action = "{{ route('todo.update') }}";
-      document.querySelector("#todo_form").submit();
-
-    function deleteTodo(todoId) {
-      document.querySelector("#select_todo_id").value = todoId;
-      document.querySelector("#todo_form").action = "{{ route('todo.delete') }}";
-      document.querySelector("#todo_form").submit();
-    }
-</script>
   <style>
     html,
     body,
@@ -319,52 +307,58 @@
   <div class="container">
     <div class="card">
       <p class="title mb-15">Todo List</p>
-        <div class="todo">
-          <form action="{{route('todo.create');}}" method="post" class="flex between mb-30">
-          @csrf
-          <input type="text" class="input-add" name="content" >
-          <button class="button-add" type="submit">追加</button>
+      <div class="todo">
+        @if (count($errors) > 0)
+          <ul>
+            @foreach ($errors->all() as $error)
+            <li>
+              {{$error}}
+            </li>
+            @endforeach
+          </ul>
+        @endif
+        <form action="/todo/create" method="POST" class="flex between mb-30">
+        @csrf
+        <input type="text" class="input-add" name="content" >
+        <button class="button-add" type="submit">追加</button>
+        </form>
+          
+        <table>
+          <tr>
+            <th>作成日</th>
+            <th>タスク名</th>
+            <th>更新</th>
+            <th>削除</th>
+          </tr>
+            
+        @foreach($todos as $todo)
+        <tr>
+          <td>
+            {{ $todo->created_at }}
+          </td>
+          
+          <form action="/todo/update" method="POST">
+            @csrf
+            <td>
+              <input type="text" class="input-update" name="content" value="{{ $todo->content}}">
+            </td> 
+            <td>
+              <button class="button-update" type="submit">更新</button>
+            </td>  
           </form>
           
-          <table>
-            <tr>
-              <th>作成日</th>
-              <th>タスク名</th>
-              <th>更新</th>
-              <th>削除</th>
-            </tr>
-            
-            @foreach($todos as $todo)
-              
-            <tr>
-              <td>
-                {{ \Carbon\Carbon::now()->format("Y-m-d H:i:s") }}
-              </td>
-              <form action="/todo/update" method="post">
-                @csrf
-                <td>
-                  <input type="text" class="input-update" name="content" value="{{ $todo->content }}">
-              </div>
-                </td> 
-                <td>
-                <button type="button" onclick="updateTodo({{ $todo->id }})" class="button-update">更新</button>
-                </td>
-              </form>
-              
-              <td>
-                <form action="/todo/delete" method="post">
-                  @csrf
-                  <input type="hidden" name="_token">
-                  <button type="button" onclick="deleteTodo({{ $todo->id }})" class="button-delete">削除</button>
-                </form>
-              </td>
-              @endforeach
-            </tr>
-          </table>
-        </div>
-      </div>
+          <td>
+            <form action="/todo/delete" method="POST">
+            @csrf
+              <button class="button-delete" type="submit">削除</button>
+            </form>
+          </td>          
+        </tr>
+        @endforeach
+      </table>
     </div>
   </div>
+</div>
 </body>
 
 </html>
