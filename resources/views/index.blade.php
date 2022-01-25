@@ -334,7 +334,7 @@
         @foreach($todos as $todo)
         <tr>
           <td>
-            {{ $todo->created_at }}
+            {{ $todo->updated_at}}
           </td>
           
           <form action="/todo/update" method="POST">
@@ -348,7 +348,7 @@
           </form>
           
           <td>
-            <form action="/todo/delete" method="POST">
+            <form action="/todo/delete/{{ $todo->id }}" method="POST">
             @csrf
               <button class="button-delete" type="submit">削除</button>
             </form>
